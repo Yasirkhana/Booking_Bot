@@ -73,8 +73,18 @@ class booking(webdriver.Chrome):
         # # while(guest_number != guest_count){
 
         # # }    
-
+    while True:
         decrease_button = self.find_element_by_css_selector(
             'button[data-bui-ref="input-stepper-subtract-button"]'
         )
         decrease_button.click()
+
+        increase_btn = self.find_element_by_css_selector(
+            'button[data-bui-ref="input-stepper-add-button"]'   
+        )
+        
+        adult_value_element = self.find_element_by_id('group_adults')
+        adult_value = adult_value_element.get_attribute('value')
+
+        if int(adult_value) == 1:
+            break
