@@ -1,5 +1,6 @@
 from ast import Str
 from datetime import date, datetime
+from itertools import count
 from select import select
 from selenium import webdriver
 
@@ -23,15 +24,15 @@ class booking(webdriver.Chrome):
     def land_first_page(self):
         self.get(const.URL)
         
-    # def change_currency(self, currency=None):
-    #     currency_element = self.find_element_by_css_selector(
-    #         'button[data-tooltip-text="Choose your currency"]'
-    #         )
-    #     currency_element.click()
-    #     select_currency = self.find_element_by_css_selector(
-    #         f'a[data-modal-header-async-url-param*="selected_currency={currency}"]'
-    #     )
-    #     select_currency.click()
+    def change_currency(self, currency=None):
+        currency_element = self.find_element_by_css_selector(
+            'button[data-tooltip-text="Choose your currency"]'
+            )
+        currency_element.click()
+        select_currency = self.find_element_by_css_selector(
+            f'a[data-modal-header-async-url-param*="selected_currency={currency}"]'
+        )
+        select_currency.click()
 
     def select_location(self,location=None):
         enter_location = self.find_element_by_id('ss')
@@ -57,34 +58,37 @@ class booking(webdriver.Chrome):
         checkout.click()
 
 
-    def select_guests(self, guest_number=None):
+    def select_guests(self, guest_number=1):
 
         guest_element = self.find_element_by_id('xp__guests__toggle')
 
         guest_element.click()
 
-        # # increase_btn = self.find_element_by_css_selector(
-        # #     'button[aria-label="Increase number of Adults"]'
-        # #     )
+      
         guest_count = self.find_element_by_css_selector(
             'span[data-bui-ref="input-stepper-value"]'
         )
         print("NUmber OF GUEST =" + guest_count.text)
-        # # while(guest_number != guest_count){
-
-        # # }    
-    while True:
-        decrease_button = self.find_element_by_css_selector(
-            'button[data-bui-ref="input-stepper-subtract-button"]'
-        )
-        decrease_button.click()
-
-        increase_btn = self.find_element_by_css_selector(
-            'button[data-bui-ref="input-stepper-add-button"]'   
-        )
+     
+        while True:
+            decrease_button = self.find_element_by_css_selector(
+                'button[data-bui-ref="input-stepper-subtract-button"]'
+            )
+            decrease_button.click()
+           
         
-        adult_value_element = self.find_element_by_id('group_adults')
-        adult_value = adult_value_element.get_attribute('value')
+            adult_value_element = self.find_element_by_id('group_adults')
+            adult_value = adult_value_element.get_attribute('value')
 
-        if int(adult_value) == 1:
-            break
+            if int(adult_value) == 1:
+                break
+        increase_btn = self.find_element_by_css_selector(
+                'button[aria-label="Increase number of Adults"]'   
+            )
+        for i in range(guest_number-1):
+            increase_btn.click()
+        submit_btn_element = self.find_element_by_css_selector(
+            'button[data-sb-id="main"]'
+            )
+        submit_btn_element.click()
+        
